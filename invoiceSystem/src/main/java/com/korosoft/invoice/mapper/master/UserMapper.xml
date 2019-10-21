@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korosoft.invoice.mapper.master.UserMapper">
+	
+	<!-- 按户号查询普通用户 -->
+	<select id="findUserByCtmNum" resultType="com.korosoft.invoice.bean.UnitUserBean" >
+		select ctm_num,ctm_name,ctm_addr,'1' user_type from fct_ctm where ctm_num=#{ctmnum}
+	</select>
+	
+	<!-- 按户号查询普通用户 的信息-->
+	<select id="getusermsgbyno"  parameterType="com.korosoft.invoice.bean.JbaseBean"   resultType="com.korosoft.invoice.bean.UserMsgResultBean">
+	   select jhistory.cdate,jhistory.quanty,jhistory.quantyo,jhistory.quantyoo,jhistory.price,jhistory.priceo,jhistory.priceoo,jhistory.pwf,jhistory.cnj,jhistory.ljprice,jbase.hno,jbase.name,jbase.phone,jbase.addr from jbase	 
+	    left join jhistory on jbase.hno=jhistory.hno
+	    where jbase.hno=#{hno} and jhistory.cdate between #{startTime} and #{endTime} 
+	</select>
+	
+	<!-- 按户号查询大中用户 的信息-->
+	<select id="getDZusermsgbyno"  parameterType="com.korosoft.invoice.bean.JbaseBean"   resultType="com.korosoft.invoice.bean.UserMsgResultBean">
+	   select jtshistory.cdate,jtshistory.quanty,jtshistory.price,jtshistory.pwf,jtshistory.cnj,jtshistory.ljprice,jtsbase.hno,jtsbase.name,jtsbase.phone,jtsbase.addr from jtsbase	 
+	    left join jtshistory on jtsbase.hno=jtshistory.hno
+	    where jtsbase.hno=#{hno} and jtshistory.cdate between #{startTime} and #{endTime} 
+	</select>
+	
+	<!-- 按户号和年月查询普通用户 的信息-->
+	<select id="getUserInfobyno"  parameterType="com.korosoft.invoice.bean.JbaseBean"  resultType="com.korosoft.invoice.bean.UserMsgResultBean">
+	  select jhistory.cdate,jhistory.quanty,jhistory.quantyo,jhistory.quantyoo,jhistory.price,jhistory.priceo,jhistory.priceoo,jhistory.pwf,jhistory.cnj,jhistory.ljprice,jhistory.cdate,jbase.hno,jbase.name,jhistory.uprice,jhistory.pwuprice from jbase
+	  left join jhistory on jbase.hno=jhistory.hno
+	  where jbase.hno=#{hno} and jhistory.cdate  between #{month_id} and #{month_id} 
+	</select>
+	
+	<!-- 按户号和年月查询大中用户 的信息-->
+	<select id="getDZUserInfobyno"  parameterType="com.korosoft.invoice.bean.JbaseBean"  resultType="com.korosoft.invoice.bean.UserMsgResultBean">
+	  select jtshistory.cdate,jtshistory.quanty,jtshistory.price,jtshistory.pwf,jtshistory.cnj,jtshistory.ljprice,jtshistory.cdate,jtsbase.hno,jtsbase.name,jtshistory.gyuprice,jtshistory.ljsdate,jtshistory.pwsdate from jtsbase
+	  left join jtshistory on jtsbase.hno=jtshistory.hno
+	  where jtsbase.hno=#{hno} and jtshistory.cdate  between #{month_id} and #{month_id} 
+	</select>
+	
+	<!-- 按户号查询普通用户 的级别-->
+	<select id="getuserkpfg" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.JbaseBean" >
+		select kpfg from jbase where hno=#{hno}
+	</select>
+	
+	<!-- 按户号查询大中用户 的级别-->
+	<select id="getDZuserkpfg" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.JbaseBean" >
+		select kpfg from jtsbase where hno=#{hno}
+	</select>
+	
+	<!-- 根据普通户号查询最近6条账单信息-->
+	<select id="queryHistoryBill" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.HistoryBillBean" >		
+		select top 6 jhistory.cdate,jbase.hno,jbase.name,jbase.phone,jbase.addr,jhistory.price, jhistory.priceo,jhistory.priceoo,jhistory.pwf,jhistory.cnj,jhistory.pwcnj,jhistory.ljprice from jbase
+		left join jhistory on jbase.hno=jhistory.hno
+		where jbase.hno=#{hno}
+		order by jhistory.cdate desc
+	</select>
+	
+	<!-- 根据普通户号查询最近6条账单信息-->
+	<select id="queryHistoryBigBill" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.HistoryBillBean" >		
+		select top 6 jtshistory.cdate,jtsbase.hno,jtsbase.name,jtsbase.phone,jtsbase.addr,jtshistory.price, jtshistory.pwf,jtshistory.cnj,jtshistory.pwcnj from jtsbase
+		left join jtshistory on jtsbase.hno=jtshistory.hno
+		where jtsbase.hno=#{hno}
+		order by jtshistory.cdate desc
+	</select>
+</mapper>

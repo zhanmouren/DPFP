@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korosoft.invoice.mapper.master.LoginMapper">
+	<insert id="save" parameterType="com.korosoft.invoice.bean.LoginBean">
+		insert into INVOICE_USER(u_id,login_name,password,username)
+		values(#{u_id},
+		#{loginName},#{password},#{username})
+	</insert>
+	
+	<select id="login" resultType="com.korosoft.invoice.bean.LoginBean" parameterType="com.korosoft.invoice.bean.LoginBean" >
+		select uid id, pwd password,name username from kpuser where uid=#{loginName} and pwd=#{password}
+	</select>
+	
+</mapper>

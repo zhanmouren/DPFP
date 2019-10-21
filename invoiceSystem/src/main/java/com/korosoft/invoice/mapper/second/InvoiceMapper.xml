@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korosoft.invoice.mapper.second.InvoiceMapper">
+	
+	<select id="getuserfpmsgbyno" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.UserMsgfpResultBean">
+		select * from invoice_record
+		where ctm_num=#{hno} and month_id between #{startTime} and #{endTime} and dzfp_state=1
+	</select>
+	
+	<insert id="addIntoInvoice" parameterType="com.korosoft.invoice.bean.InvoiceRecordBean">
+			insert into invoice_record(ctm_num,ctm_name,month_id,invoice_num,Invoice_code,invoice_url,code_num,batch_num,kp_man,kp_time,dzfp_state,zp_state,kp_price,kp_taxAmount)
+			 values(#{ctm_num},#{ctm_name},#{month_id},#{invoice_num},#{Invoice_code},#{invoice_url},#{code_num},#{batch_num},#{kp_man},#{kp_time},#{dzfp_state},#{zp_state},#{kp_price},#{kp_taxAmount})							 							
+			
+	</insert>
+	
+	<insert id="addLog" parameterType="com.korosoft.invoice.bean.InvoiceLogBean">
+			insert into invoice_log(begin_time,end_time,requestData,remoteAddr,responseData,type,create_name,create_time,update_name,update_time,className,token)			
+							values(#{begin_time},#{end_time},#{requestData},#{remoteAddr},#{responseData},#{type},#{create_name},#{create_time},#{update_name},#{update_time},#{className},#{token})
+			
+	</insert>
+	
+	<delete id="delInvoiceByno" parameterType="com.korosoft.invoice.bean.JbaseBean">
+	    delete from invoice_record
+	    where ctm_num=#{hno} and month_id = #{month_id} and dzfp_state=1
+	</delete>
+	
+	<select id="getMaxBillCode" parameterType="com.korosoft.invoice.bean.DateYMDBean" resultType="java.lang.String">
+		select Max(SUBSTRING(code_num,-7)) FROM invoice_record
+		where SUBSTRING(code_num,3,8)= #{todayymd}
+   </select>
+   
+   <select id="getUserFPInfobyno" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.UserMsgfpResultBean">
+		select batch_num,code_num,dzfp_state from invoice_record
+		where ctm_num=#{hno} and month_id = #{month_id} and dzfp_state=1
+	</select>
+	
+	<insert id="addIntoRedInvoice" parameterType="com.korosoft.invoice.bean.InvoiceRedBean">
+			insert into invoice_red(ctm_num,ctm_name,month_id,invoice_num,Invoice_code,invoice_url,zf_man,zf_time,kpred_price,red_type,kp_taxAmount)			
+						  values(#{ctm_num},#{ctm_name},#{month_id},#{invoice_num},#{Invoice_code},	#{invoice_url},#{zf_man},#{zf_time},#{kpred_price},#{red_type},#{kp_taxAmount})							
+			
+	</insert>
+	
+	<delete id="delInvoiceBySpecialno" parameterType="com.korosoft.invoice.bean.JbaseBean">
+	    delete from invoice_record
+	    where ctm_num=#{hno} and month_id = #{month_id} and zp_state between 2 and 3 
+	</delete>
+	
+	 <select id="getUserzpInfobyno" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.UserMsgfpResultBean">
+		select batch_num,code_num,dzfp_state,zp_state from invoice_record
+		where ctm_num=#{hno} and month_id = #{month_id} and zp_state between 1 and 3 
+	</select>
+	
+	
+	<delete id="delSpecialInvoiceByzpstate" parameterType="com.korosoft.invoice.bean.JbaseBean">
+	    delete from invoice_record
+	    where ctm_num=#{hno} and month_id = #{month_id} and zp_state =1
+	</delete>
+	
+	<select id="getUserDKFPInfo" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.UserMsgfpResultBean">
+		select ctm_num, batch_num,code_num from invoice_record
+	    where ctm_num=#{hno} and month_id = #{month_id} and zp_state =1
+	</select>
+	
+	<delete id="delSpecialInvoiceByCodenum" parameterType="com.korosoft.invoice.bean.JbaseBean">
+	    delete from invoice_record
+	    where code_num= #{code_num}
+	</delete>
+	
+	<update id="updateSpecialInvoicebynum" parameterType="com.korosoft.invoice.bean.InvoiceRecordBean">
+	    update invoice_record set invoice_num= #{invoice_num},invoice_code=#{invoice_code},kp_man=#{kp_man},kp_time=#{kp_time},zp_state=#{zp_state}
+	    where code_num=#{code_num}	    
+	 </update>
+	 
+	 <select id="getuserzpmsgbyno" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.UserMsgfpResultBean">
+		select * from invoice_record
+		where ctm_num=#{hno} and month_id between #{startTime} and #{endTime} and zp_state between 1 and 3
+	</select>
+	
+	<select id="getCountPTFPMsg" resultType="com.korosoft.invoice.bean.IndexReportBean">
+	    select count(*) as kpNum,sum(kp_price) as kpPrice,sum(kp_taxAmount) as KpShuiER
+	    from invoice_record
+	    where dzfp_state=1
+	</select>
+	<select id="getCountPTFPRedMsg" resultType="com.korosoft.invoice.bean.IndexReportBean">
+	    select count(*) as redNum,sum(kpred_price)   as kpRedPrice,sum(kp_taxAmount) as kpRedShuiER
+	    from invoice_red
+	    where red_type=1
+	</select>
+	<select id="getCountZPMsg" resultType="com.korosoft.invoice.bean.IndexReportBean">
+	    select count(*) as kpNum,sum(kp_price)   as kpPrice
+	    from invoice_record
+	    where zp_state between 2 and 3
+	</select>
+	<select id="getCountZPRedMsg" resultType="com.korosoft.invoice.bean.IndexReportBean">
+	    select count(*) as redNum,sum(kpred_price)  as kpRedPrice
+	    from invoice_red
+	    where red_type=2
+	</select>
+	<select id="getCountUserMsg"  parameterType="com.korosoft.invoice.bean.IndexReportBean"  resultType="com.korosoft.invoice.bean.IndexReportBean">
+	   select remoteAddr as LastIp,end_time as lastLoginTime,
+       (select count(end_time) from  invoice_log where invoice_log.create_name=#{loginName} and invoice_log.update_name="登陆"  and token !="" and token is not null  ) as loginNum
+	    from invoice_log 
+	    where create_name=#{loginName} and update_name="登陆" and token !="" and token is not null 
+	    group by remoteAddr,end_time
+	    order by end_time desc LIMIT 1,1
+	    
+	</select>
+	<select id="searchPirceANDTax" parameterType="com.korosoft.invoice.bean.JbaseBean" resultType="com.korosoft.invoice.bean.UserMsgfpResultBean">
+		select month_id,ctm_num,ctm_name,kp_price,kp_taxAmount from invoice_record
+	    where code_num=#{code_num}
+	</select>
+	
+	<select id="searchLastToken"  parameterType="com.korosoft.invoice.bean.IndexReportBean"  resultType="com.korosoft.invoice.bean.IndexReportBean">
+	  
+       select end_time as lastLoginTime,token   
+	    from invoice_log 
+	    where create_name=#{loginName} and update_name="登陆"
+	    group by end_time
+	    order by end_time desc LIMIT 1
+	    
+	</select>
+	
+</mapper>

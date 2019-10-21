@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korosoft.invoice.mapper.second.UnitMapper">
+
+ 
+<!--  <resultMap id="ResultMap" type="com.korosoft.invoice.bean.UnitDataBean">
+<collection>
+    <id column="b_id"  property="id" />
+    <result column="ctm_name"  property="ctmName" />
+    <result column="ctm_addr"  property="ctmAddr" />
+    <result column="tax_num"  property="taxNum" />
+    <result column="link_tel"  property="linkTel" />
+    <result column="bank_name"  property="bankName" />
+    <result column="bank_num"  property="bankNum" />
+    <result column="total"  property="Total" />    
+    </collection>
+</resultMap>
+-->
+
+	<select id="findAllUnit" resultType="com.korosoft.invoice.bean.UnitDataBean" >
+		select a.*,
+		    (select count(b.unit_id) from invoice_unit_user b where a.b_id=b.unit_id) Total 
+		     from fct_invoice_unit a
+	</select>
+	<select id="findUnitByName" resultType="com.korosoft.invoice.bean.UnitDataBean" parameterType="String">
+		select * from fct_invoice_unit  where ctm_name like '%${name}%' or ctm_addr like '%${name}%' or link_tel like '%${name}%' or tax_num like '%${name}%'
+	</select>
+	<select id="findById" resultType="com.korosoft.invoice.bean.UnitDataBean" parameterType="int">
+		select * from fct_invoice_unit  where b_id=#{id}
+	</select>
+	
+	<!-- 导入单位资料 -->
+	<insert id="importUnit"  parameterType="String">
+	    insert into fct_invoice_unit (ctm_name,ctm_addr,tax_num,bank_name) value('${name}','${addr}','${taxnum}','${bank}')
+	</insert>
+	
+	<!-- 增加单位资料 -->
+	<insert id="UnitAdd"  parameterType="com.korosoft.invoice.bean.UnitDataBean">
+	    insert into fct_invoice_unit (ctm_name,ctm_addr,tax_num,link_tel,bank_name,bank_num) value('${ctm_name}','${ctm_addr}','${tax_num}','${link_tel}','${bank_name}','${bank_num}')
+	</insert>
+	
+	<!-- 删除单位资料 -->
+	<delete id="deleteUnit"  parameterType="int[]">
+	    delete from fct_invoice_unit where b_id in
+	    <foreach item="ids" collection="array" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+	</delete>
+	
+	<!-- 修改单位资料 -->
+	<update id="updateUnit" parameterType="com.korosoft.invoice.bean.UnitDataBean">
+	    update fct_invoice_unit set 
+	         ctm_name=#{data.ctm_name},
+	         ctm_addr=#{data.ctm_addr},
+	         tax_num=#{data.tax_num},
+	         link_tel=#{data.link_tel},
+	         bank_name=#{data.bank_name},
+	         bank_num=#{data.bank_num} 
+	     where b_id = #{data.b_id} 
+	</update>
+	
+	<!-- 查询单位用户列表 -->
+	<select id="findUnitUserById" resultType="com.korosoft.invoice.bean.UnitUserBean" >
+		select * from invoice_unit_user where unit_id=#{id}
+	</select>
+	
+	<!-- 按户号查询单位用户 -->
+	<select id="findUnitUserByCtmNum" resultType="com.korosoft.invoice.bean.UnitUserBean" >
+		select * from invoice_unit_user where ctm_num=#{ctmnum}
+	</select>
+	
+	<!-- 审核单位用户是否已存在该资料里面 -->
+	<select id="checkUser" parameterType="String" resultType="int">
+		select unit_id from invoice_unit_user where ctm_num=#{ctmnum}
+	</select>
+	
+	<!-- 把单位用户绑定单位资料表 -->
+	<update id="addUser"  >
+		update invoice_unit_user set unit_id=#{id} where ctm_num=#{ctmnum}
+	</update>
+	
+	
+		<!-- 移除对应单位资料的用户 -->
+	<update id="updateUser"  parameterType="int[]">
+		update invoice_unit_user set unit_id=0 where ctm_num in
+		<foreach item="ctmnum" collection="array" open="(" separator="," close=")">
+            #{ctmnum}
+        </foreach>
+	</update>
+	
+</mapper>

@@ -1,0 +1,12 @@
+app:
+  etcloud:
+    openInvoiceUrl:
+      http://192.168.4.241/invoice/api/electronic
+    openSpecialInvoiceUrl:
+      http://192.168.4.241/invoice/api/special/open
+    cancelSpecialInvoiceUrl:
+      http://192.168.4.241/invoice/api/special/cancel
+    openUrlPeople:
+      zhangxiulin
+  minute:
+    30

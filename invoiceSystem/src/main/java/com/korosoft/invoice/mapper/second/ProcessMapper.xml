@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.korosoft.invoice.mapper.second.ProcessMapper">
+
+   <!-- 审核列表（全部） -->
+	<select id="findAll" resultType="com.korosoft.invoice.bean.ProcessBean" >
+		select * from process_info where state_id=#{state_id}
+	</select>
+	
+	<!-- 审核列表（按户号） -->
+	<select id="findAllbyCtmNum" resultType="com.korosoft.invoice.bean.ProcessBean" parameterType="String">
+		select * from process_info where state_id=#{state} and ctm_num=#{ctmnum}
+	</select>
+	
+	<!-- 需审核数量 -->
+	<select id="processCount" resultType="int" parameterType="com.korosoft.invoice.bean.LoginBean">
+		select count(*) from process_info where state_id=0
+	</select>
+	
+	<!-- 审核权限查询 -->
+	<select id="PermissionType" resultType="int" parameterType="com.korosoft.invoice.bean.LoginBean">
+		select count(*) from process_user where login_name=#{loginName}
+	</select>
+	
+	
+</mapper>
