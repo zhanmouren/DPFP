@@ -57,7 +57,7 @@ public class LoginAuthorizeAspect {
 				return data;
 			}		
 			//获取用户名
-		      HttpSession session = request.getSession();
+		       HttpSession session = request.getSession(); 
 		        String loginName="";
 		        if(session.getAttribute("loginName")!=null) {
 		        	 loginName=session.getAttribute("loginName").toString();
