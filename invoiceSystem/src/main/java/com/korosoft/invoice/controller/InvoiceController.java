@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.korosoft.invoice.authority.annotation.LoginToken;
 import com.korosoft.invoice.authority.annotation.StaffAttribute;
@@ -723,10 +724,17 @@ public class InvoiceController {
         		String result=HttpRequest.doPost(openInvoiceUrl, data, headers);
         		ResultData resultData = JSONObject.parseObject(result, ResultData.class); 
         		InvoiceResultDataBean invoiceResultDataBean=null;
-        		 double TaxAmount=0;
+        		 double TaxAmount=0;	
         		ExtendInfoBean extendInfoBean=null;
         	
         		if(!("").equals(resultData.getData())) {
+//        			String aa=JSONObject.parseObject(resultData.getData()).getString("invoiceDetailList");
+//        			JSONArray aa1=JSONArray.parseArray(aa);
+//        			for(int i=0; i< aa1.size(); i++) {
+//        				JSONObject object = aa1.getJSONObject(i);
+//        				String jsb = object.getString("adValoremTotal"); 
+//        			}
+//        			String bb=JSONObject.parseObject(resultData.getData()).getString("applyDate");
         			 invoiceResultDataBean=JSONObject.parseObject(resultData.getData(), InvoiceResultDataBean.class);
             		//pdf地址
             		 extendInfoBean=JSONObject.parseObject(invoiceResultDataBean.getExtendInfo(), ExtendInfoBean.class);          		 
@@ -1795,6 +1803,7 @@ public class InvoiceController {
 		      System.out.println("加密前" + JsonContent);
 		      String Content = AesUtil.encrypt(JsonContent);
 		      Content = Content.replaceAll("\r|\n", "");
+		      
 
 		      Map map = new HashMap();
 		      map.put("goUrl", goUrl);

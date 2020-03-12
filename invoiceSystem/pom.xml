@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.1.5.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/> <!-- lookup parent from repository -->		
 	</parent>
 	<groupId>com.korosoft.invoice</groupId>
 	<artifactId>invoiceSystem</artifactId>
@@ -14,6 +14,7 @@
 	<packaging>war</packaging>
 	<name>invoiceSystem</name>
 	<description>Demo project for Spring Boot</description>
+	
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,6 +31,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 			</dependency>
+			
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 			
 		<dependency>
 		    <groupId>junit</groupId>
