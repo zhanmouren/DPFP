@@ -70,8 +70,7 @@ public class LoginAuthorizeAspect {
 		        	 if(!token.equals(indexReportBeanList.get(0).getToken())) {
 		        		 return data;
 		        	 }
-		        }
-		      
+		        }      
 			
 		}
 		return point.proceed();
